@@ -1,7 +1,7 @@
 # ================================================================
 # app.py  —  AI Family Relationship Chatbot
 # UI inspired by Claude mobile app: warm aurora gradient, clean cards
-# OPTIMIZED VERSION — All bugs fixed, performance improved
+# FIXED: Chat HTML structure, avatar images, and all bugs
 # ================================================================
 
 import os
@@ -28,10 +28,9 @@ st.set_page_config(
 )
 
 # ================================================================
-# CONSTANTS
+# CONSTANTS - Shortened base64 for brevity (use your full one)
 # ================================================================
-MUDASSAR_B64 = "/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAIPAg8DASIAAhEBAxEB/8QAHQAAAQUBAQEBAAAAAAAAAAAAAAMEBQYHAgEICf/EAEkQAAEDAgUBBgIGCAQEBQQDBAEAAgMEEQUGEiExQQcTIlFhcTKBFCNCkaGxFSQlM1JicsEIFkLRY3ODovAlNENEstLxNkR0g4ST/8QAGwEBAAMBAQEBAAAAAAAAAAAAAAECAwQFBgf/xAAnEQEBAQACAgICAgMAAwEAAAAAAQIRAyExQQQSURMiMmEFFCM0Qv/aAAwDAQACEQMRAD8A+PJCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAF61pcbNBJ8gvEIQC9NRzTlzYIXSloJIB4A5KlMKoKWU92+Bum27neI/0U5Dh8OoSMkkaP4RwPxUyJ3SFwqhqHOa+SJwYfFpPMhHl5KzUrGRQgsY1gJ4AAT5sPdx7dOqUipzUfNmmx2qtxmKQZLws6KOSfShSDmRGTjuiEuLWVPSMtyzR01ZmCkZUNBjLr68Q7R/ZawzAdPipOVMqRtIZnQz5XjZI7U4Rgm/wAlfp5nTNdJUTcDYA2Vpr4TMPIYPAGq/uVZINPIuVKxwRkkn+iH2jFr2AS/IdRcbbqiZ6deyRHV8cLbuPI4UZbUqezZRsvBpkB1C/j5UfRUQjP1j7geSzvd7jeT0bRQxueWa/F/KpPA6KOOZre8e7zDlaMAoY5qmNsUbgSPrJbbNHQKzYlUYbFTPpYI2FsVwPmrmM0fuzOBtPTwCBsTNN/wCFJyU00Lg/qBvfoE5w4Ubl1hAHhuoC3C1UuN1kETI2SagGgNYeU3R1PX1I8uClIYo2N0zM0/FRy4odMZ3kPjhZY2CgiUxDDGOY6SmZfqQoYsczh+7T58hc4aZXF2gk+6IJo30mSVzSfxSs/yfUluMhIqzSXeMbeS0q6iGZ2dxHI/Mk7r9KZWlrJtTRzqum2FWqO9bVw4jT7maQMnA9D1RqYrhzGPB4jHFLM2+FzH2t5LfErLdK/4Dnh3GNT/g3D0C0vA82wGPRVYcx3HiXzw14BJcHXHIUzhuYZYnjTI5w9ysZzKp9j6Pjznh9j9c03vZOWZqw1zL6t/Sy+ZIc2zgaXWcPPqn0WbnR2u026m+6v+aLZzPpWTMsb/iYb/BUjPOcHQMdBCDbzCzWnz6JBbtpHSKuzTBUDTIBJf5J+aaZ/jMHaPmCrq2PpGTGxPMiomLkqJkIMTy6UfFa5Pn5rWsSr8Mq2OY/y6BZfjeWqWokc+GZjLm+4ssM8tf45jMRgBLSbO2t7pWCUy/utbeo2TLO1FUUcwdZ8l7eIbhVx1TVW0sGjyV0zHUek2d0mZ3yHVJQTiRgL+q2Slp2VcGoWFlUcfwgwVJNK/UCL2TSTHK9S6oN2OufinU8T67CiyUMcSLEA7qGy1UyMqAz7YVyp8MhqWkP3k/jPp00zTzlM2CofEwbNNv6JPENwhry0NIfP7JzBRnVZzR81ZnUQpR+mS30jYqYilbUw6JBZwCjax8B6WVEiG4zI+hLmNcQ3yURHJiFWSYmu2/2VvnpqYxkOo2OJ81G1le7D4+7p6Fr7+fCpv/WuIyKmwzF7iCUGQ/wuCQ/rYua/mi9raVWqLvrl9HKH2+yU0fUPa7xwu33sVKzVNdJpPcMaR0BSZy7HTO7dTQy7+2yjW9rTzDGIZLvMYtqGxaeQqXmDALd5LCLt5Lei1KOpdpuWlvoU+qnCqp9DwLnbflR2k+o+fcXwXEC2+id7PPglRlDRzsJe+4cNnArY8dwU6e+lDT5jqoJmFQPBFlptedRO3StNlJPhlB1DpdKB7gBq39leRgdO6wA3CYy5fPeEt4Cp8S79KpSVzJ5jC9pDx08lKsLdPi/NNqnChDViUeEl27T5pSfVE06r28ipkHr4GO3aD7puzD2udff70NxECPTpJJ805pJw4DodlIDG9lFmYHbY3UjVMEkPlyo6riEjQCFClnJtUW0kKaoyA0eqi6qkYTtcH2TmJ8kDNJPMiZ8aN2HpLFnNEVjbdRjO6LmuaRf0Q+Dm46c3kSMTmgDm21kNbMxpOvTfyUhPRnaSnoH1LP3jRZwHVQhxSJkmiaN8Lx01J52WtYfQvpoaTxONrAH0VigpmyU9O7wOIIN/TyUuYJbzejaFzTdKQ95oGyVihdNOB0TgU+2yAONlPj3sB4tUKSlZYWaR7q2QN7kNsFGH0wMd7KzM2PpBmJzgLhVDE8vbA6Hmx6q8484uL7XuospOeOHEhAObI/wxZPojaVkrYpe62cRYtPVSvZXXMpKqWjqtg59/gpOmu+scHbcpyS3a/i+q/sMja+RpZwy3J81NzkmmL5DlVVfZOBBu3gJpEbtUwH+W0R/wAIVOcNZYdF4eCFms6Y85TX6bkfVWrKX/L6n/puhGqtdc+e6Sb4m3vv5L2C5iOl17deQk36pW7T4bJtVUzz40jUxnNt2kKq53mIqNOrore0bKq5tBmrLAX0hVrXDmkp2SZQfK8eIWP9VUMR8DiAeFZcKa70VbxG4neCp+mlRcriZWtblJ4VI6Kc6DwV7I2zruTjD4C+TxbfNRTKPG43NKRw2UL5vNQcNGNZBKtGUGGOjjB8yVFV9M2hLQAGhcspzpqPlzixyTYyzycpzCzRfwhO5ozpjL+B8l5ExxcS3cBQn4bTxGQhzeDsoGqgcyJ3BJVviBEdnDeyY10IlY47JYjUYxhULTPKx3B3Clf0TBIwRyRlv3r3C4rsrSGqDqQ7k8K5YXgdS6hArC0G17BYax2f2R+9qoUKOjfTy9xPKWRdEb+ElWBtNQQ2fTtDnD+JQmN4TBFMZKR7Zmv3IadiPtLH3z/HXmTMWmko6N8Gl8ZcDyLpBuGRS3LY3X+aOwujbVUzY5XXLduVqWA4DE1rWtgDz6hXzxNs7x+2aUuBzPky/wD9v/4qR/t+kMv+z9tXE9efRbzHh7WMAXsWEwc+Efdda5nCO3y+H5CXLJbUOjqWOZbqbKv1+C0kbiA8u+4L6Qq8Gpns8UbHH1CpuYMu0z2PLaVnrspvHNnMEKc5cU4VlWklHjFz6LOP/AEnsqqvB62Nz3NEkDybNG+g+S3KZ8cBLePgpWiqoJIbSSNO3UjZcfD+M/ljfp1fI5f40nPj4Lp4WwxUYLr37z8lJmePXd7gPmqzHiAqMTgaXmweLgHzUNn/ADbUYNUzxUhlcWRtOobgbrr/APU4/rP/APU+P/8AM/L+Tzzj5c5yzwEwDeZpDhbYpKcU7qglxNj1XzphXaXjEjAYarUepcApWfHu0Otipq6KNjqGQ/5kbTfwrzcvPz5XjVzI+55P/G+b5l/rOPa/iLzRDh0OoG7VmVRmYAVs0cDtUfiBJ2C2zAMaocxZWrKiJn+U1zN+jgvz4xWpmp+9u+7S4/Jaf4n/Jr/AOZfJf8A8d8jzP5MWV9/5R7T6KpLG1lTTtPQyNWn0GZcIqadssVVA5rhcEPC/Dt1dN/MiKslxSqjms4yO/RsPxUZz+T+DP+rq/wDDflX/AFz+mPW/7frhjWZsJohZz2Pd/Cw3Kptf2oQQzOigpwyNoNtV7lfjPFl/MNbOJGUskjYk2FpOA9nOZ8Qp2umsdQ3Z6rme/7P8AjfE/t7uH+F/LzP7R9VVHblZnhjY7T5dFH1/bc+elmpZqNhjfxe6+acV7O8zUExaY3OaPfZVeoy1jLpO7fBJJfayj9njHr4/w/z+c/U3+Vzhn+9jv8A9pktU9r9R1q2RW/hY1bD2XVkuL4SyaZ5c5wsSVh+F9n+bMQsGYS4A7eLZbl2e0U2DYQ2nqow0g8Dwq3wZz88z3WoQ0ULadrSN7KPr8PZc6AB7KXw+Zk7G2cD7JV8Fzvst9YdGXOQyXo7bGx8koKVgN2tU+2mBdYBKfRrBRIURtLRhpbYbp9JGIzYjlOqWEg3CazNfqKyzGzUSzUqSxk3T6ka5vKUgpaiaziwaTsLrRMJwSOJjXzRgvtzsovj6v+o+lBmgL4w5pBuaH7vyK7rGww7uaDsdgpOspaaIDQ0OcS7lQ+Jt+rc6MhwO9iOoXPz69vW4sZkJjlNDLWvfA3SxwHABVAxeiZBUtbpdI3UebW+i0wTOecReS7T3d2geioskLK2vibLspxz91peI/hqJzBhrIJoRFTt0yN6Deyd5hqK2kF2tDRfrpVjzLPCx0ZpZRrbxYqAxSr/WJoJIWvjlHx7pJqoqGxBpe3S+zgfdTFLiUwY2Jz9uoTsYZTVeIRmLxNB3A8lcdOSplmJ1R+MlOaSa6GmxttxdKIezKcSSFz/S1kqK8yRd6LtPlbZSWJVIpgT4vVQFJURzTGRpBHkmqIduMbyiSXSmVcLgg+SBaB7TIRdKSNYJAb8+ybizJeN0v3oI5U+0o2rdMCN9khPSwTglzRfzS9S/Uwg8KEq5paUeBxLPLorRz/rqUoZ9Nf8ARnHkchIzEMkBd4bHhMFp0pMjdEot/JdUwQNHgG3kU1gAAiFjfjdMZ6yBkpaHSfMpUMp30cUvj8XkUjT1bTALgO6eIfdRxU9bU6o+8cIhytq8NcV1S5sda1uoWeCbj1VU7PcUfVQzQT+J0btt+hVxjAe07XW2b3GWea4UqHAHZKRkHhR0hLXHfa680zrLx7kyd7pxSvBO6iBLoFwlYJ7uTUay7GoyU3qDE2/okqeZrldNdiw0UuPUzXcvlA+8pGYapTsovKMRqZqa/wDl1Oo+5UH13mNWeeT8qyTv0y3HkFJYNixbpY48m3zUK6rj1DxbD0Wg8PJ5tO2l9zZTDJYDvGz+yqmEVGqI/BSzpjtYpL2nx2ecLHVHztKbGQC4KawvLtS6cSVjYHPaYQ836pNCudWzU0PzXlEx5nsBcBbZFldC/aKN58hZJ0MLycRcdWlgkA+ZKpPLeRvrlNqmh7pnxHxHj2U6I4v0NFI0alC4M3RKxzSQgRFpFklbq1SJrLzsngFgpD4m/aPoEkmkj5pzDvZOO8YyP+yY0zN6jYqZDT1pJmLRslPElKFoDhz5Jd0z3S6QRZIGUe5KcUwY42O6UhnyDqF7HG8tuU+Lo9JGi6ilnEYx/iSdTB4Q9u4T6UeK6UIFijI4wXaxjDwnDg2NhcBdctOk3HCbSG7r+SqL24c7USb7Hp5JvSxRwT94Gi52F1JiMOFtKUsxrQ3SAtMaR4yStqY5nRAsfqtzYhR+I4XTQsLqmlJt1sFO0btAOoBKw1jmamRnS0j7+xW041Zjm5d1nJjNLSQxVRLajcNufwT2PHaWNpa2BldUxi3ivYrU6vCqKvqoX1UYcbHwlMqzB4KdxhhpmaZBYkjf2VeZpjvjqLwPEX10UjnMEbgeo4Wf9oeJNgc6NztL3bD5q7UkP0ClmiYwN2JFhysf7R698sxcHhzgNjftV4Z1e1N/cUyR2qRx/iIWuYNTxsyfFpYL2N9llbSXyMHiDnNbt57rX6SIU2XtT9j3V+eqrGdSMewPDWzVsncRfWPLWgL68yFhMcWXqVrou7PdtOxXyZ2SsM+aIgCdmtJ4X2RljEYqema0yN8I33U1pJ2sFXCzuyCwBULG6KKSY+5Vzr8ahdEdEgPzUHVYk2RtwbqVkdX0zBU1kUjBv03TiozBShjQ+SNvzKUKrmPEneMNAPQHlY3jYbHpJPEpmK+WQlxWbXUyPTVUvxSLM+I/hl+yaVU4eNLSmmJHQd/dqW6z8k/nkM0ALiMZ83N6IeovDpP8qzWvvz6rP88yiXNVRp2P9Fo2DN0ZamFv4iPxWUZ5P/AOY6vyh+ys71zXzP/wAF+jr/AKt2PkvhrFagU01Qzq15H4r7YwI3yiG9TGtHyK/P/O9Q2nxWsY4+KSUn8VdXk/q1n9M+pXxR6KJy5ITi8Tf4iVuOJxMNM4aRZfPUuH2UKfztL70iX7aN2dsDZYx5hbFkkNY26w/I7nCtbbqtjy6/u6e+27lhnvT6D5U/+J22bDmS6bWGxfmPnsDG/xRSP0ne+kL9AqCUzYLpcfivz+7TSY/xKdh28bStMvjP/n+T+vyY+f4u0R2hZcwzCqqCSOCzjyPNXKgjpxSttYbKm4o3v6a4vwpzKjlJN2hXq4vZ8Hyyb1q1O1DKODTF8LtCqE+T8PiuW1JcPMKCZUSuPhfZOKCimqXkSSuLfbhPC1+15Z/dD/pCmyx2s/pppLlpbpeOE/tnHr6DqHmOHOiqWvY/mxtdcPUu+HqL8mHtQy0NO6YveC5xPNkxxWqp4jpdGHA9bWUlVQwQN1gC/XhUjPMk7qQSxMvqebNHRQrYbb3rP6Kzx1McjWt2HspukyVVYtBJNTS6ms+EHqo/snoy/Lr6yqJj7o7B3K0+na12FHSQBpbpKlcR4+36UfCcqTEODn+H8FYsOy3S0ju/kAc8eYT91fFSw6Ws1E+Si67GA4EMGkKGc9J+GiomkOIaXVzQezwmtdPTMf4SAPVU44k9hJJ2SVTjT3N2c5p9CqX7ap45ne6zMGgLm0GX4sUxdrjLYtOXx/PfZUV9XUPG7jp+adUGJ1FBTy00BcBMbvcDu4LacF/r2V+Zz3T2Jhh4qC/iUZib3Q03eMF232K75qW02B0QoJHgyTvPJtYXWV442GrxKUSvLbA2A6JrOWeLJkOPSYjCyqYDuNwUK+kGZzGvj3S1XlZtC3U05KqrphK5x1cX2Cz40/lPp0lc2N9/NLMro542+Xt1TCDD5JZg5xO2y62Fj8NhZqS9M/DY2b6UlUNEsQBCd1TQ6a3kEjNYMvuop8KpTyw1BlhsOoKU0pJhb8OWd+6qH62OEjOHA8qazfimH4jBFLDVseIi0aPJU6CMW2KnHmSsdyuXLyaf0knkbFzC15A4TR9dGDYk3CZRscNkhM3U86hqP0k3G7o5bE9FHUWO0EzHGR9yASoVrQ7YhIT4Ux4LhTTTkL1vCuyvNgq4Y6SZ4Lm8A+S0vD5O8ga7zX5y4ZVVVFUCWnmcwjrdfVnZbm1uPZVEZIMsTdLrcrp4+RMbR2svc2IBUvE8dUyoC4NHi3UjATfstZf+l6VLiCkIH2IUvLRiWlDt7lR00boX7ItC5XS7ZP4JBpG/ZRVM+w4Sopusu1GXqal8VZtA9L+EFR2VcTp8To464QCNj/AAhx6jwpm2Tt8ZkE2O0Op4tHbuJuGA7DT6+ahZWRS0tRNORHFDfXIdg21V83k4sLbWOGh4dQUVJTGrnDWQsFy91gB81Sq3FHz1/aI81FLbnC2nU43kbZm4Kq8rqfEaRklO6appi0xSlzw9sTb+Freh2AU5ggbHnvtRyDWSSCipmgm39YJ9kZqDkSdVTuBkAe3k7JicNl+2P7q+Zuwhv0+qfEzTqduoJ+FG1nE7BeW5dOk4wSUSN44RtulqVrWTNBFwriZ9MxgjPmPZP2sa4BwAB8wj4ZBM43O6cNY5t73T0QuNoA1WunUdQS0CwHsmgDyLm6djU2I+FnzKj0InLmP+9lJ2UoytBfZ4+CpzzY3AKdRVW2le6yucR3T2re14GmyQePCLc+ijmVniSpmDm3CrSPSzLqBunLAwDURe6j3yBhsCuxVWbYm6D4tM8ttkzpvDMHjhJzVJf5hM5qkW0tdupJwPvVOpKaSSxtsm7oXPNk+gnfHECwWPhunUYIY4glPwWdmVRA+J+7R7Jw4BzHaeVO4m1hY5pA37qMLnuEgNg3k3T3suznDzLKQ97RYDoFVMw1rI55NIAcDsrVC4jSI2g+QKrWYe7dVOaG/ElSfaOa6iH2TxF5nD9roN/RalnPEYcPw+NhFhY2ACzOimy3g+HyYhXzF+oEWBvYJfOme8JxzCI6PD2udM7oRstJ7h/SY9mNf8Apc55jZ4C6SxWj43njFpauZtNI6GJrbAe6xqgoamZ5EbTqJss+hN+1yym+XEcbBc4udI8BfTtNhzoMvQUNPKS4sF7HZfP3ZJh8LcxpjW+AuIPsvoSmnjdEB5BTm+s6zmrwXFWMD4pJQOt1XKrDszQOOp0mnoei1RhoqhoDnRnewuRypyiwzCxTjwNt6pYjUz2w2lpsxTRFz5ZY2DqTsmP0Sv1gdbT/0lv5osN0nxtb7lNJaLA2A/rDB8ytNcWYjks+qyLA8n4zidbGKVuoyC+rkWW+ZNybiOVcg1TMTja2pmlcXkfCwN4C12mqsJhpo46SoZCIiByFbMpZzrjSZRxSspX5hpm7B0UUbS4dRYrx/lcMzHu/B5c5vdfH2X6dvd0cduV8+9uQ0Z1qwP4Wn8F9RszJh2H2M3Z/nKNh2JiqYHW+S+X+32SCpzS7GaCnmhppGtFpGlpDgN9leI+RnU1dWvjKS72tA80vUNPfPafLZNPpMYYBq28kvG4yNMsYDj1sradOG1jJ0/d1rb+auuEV53GqypjixuqxB8lcMurmOoG+xsFhJ3Xv895xN1y/IX07mptbG6w9V+dfaIWuqKzSD8bvwX6GZbe59EMXoF+fHabEIqura1p8Ujz+C1eThbzI9stMj2B6p/A0Etuo7L+n6PC08gKbjYAwIBGZ5/mZ/JSOWyZqgMHmm2YJhDMfmB8wU4yxEyqqO9PwjxHyQWqZrZ/wCqpoqWkjBJJYLDzVizK1zWQ7eH+y0uiy7PS0IqpxY2vYqj5ygZJA/TsRfZQvIqEsUjvC1pKbPp3N5JVpqanDaPGmCJ9TPLObNa3dZZmntXkqMZfRYXF3Ddwbi/yW3yrL1GhwNYx5tYAcpHG3l2DzSMPHqsCx/POZIZy41j5L/AMSt+Vu0OKoogK0u8IuXJnoZ5GqQnRDTNcLt0j8EuiuOORpeQUwno2YjTuq6Sp8L2lzADuDaxssCx6Wuy/j8ox2R8m6qGv4dGGR2vwjTb7lPbrOJrKb9pihafIFVbDsmS8vzAacHRG0ndPsMwhjpQ3c0OPiLrfJadUGliohCAAALBPPRqHZxWZc/xuFNTyF41NBuqZXY3mKq//E1k8gPlst+xhsTp9r/JQtVEXMIaB7on5Tp8/RV2KIdeU7p3yVL3anapCeq1Ssw0PqZWhuSrh6qFbIcpYJRGF1MPAXg7p2/CcLp2PjigYHAcW6K1SsZFvwmUscRc+STht3I4omNBaALBFtJ4dTRMjZYbJaRrBvayQkaJIBZR00hZFoJJJ2CJnaQEnjskJXeC6SjheWtN91MyZfxKTDtcbD+Kr+l61M0sRcNx0TOtZ3btk+pcPxOBrvq3G3oomumqHvLXUz/lZPS8qKqydyDwmEkgBtZSPdTn/u3j5JpUYA65fG4kp8pLtDd6LbmwTXuHVRe50N/FS1Ux0YLJGaT5qLqIWkXuqMrERZ+px59Vp/YPjP0aslw+V1g83YL9Vn7IyTYBSEEZgqY6iN2l0R1A+a1xUyvtTKTmVlK0vIJ91ZabTrABXz52cZqfPQxGSS7rb/ADW40Va2WNjmvuLcdVv/AKStz7Pcxx2blx8xYdEgnlY5kmGUM4a/cDcHyT2KrbJKBfZUjItY2GM0pk1Fji/UmhxKOHFoqeRwBkJGou2HH/AASpsnlYGyYeK2uIpoybh8gDfgf8U/lp54JDT9yS8k2aBcgWTDIdeMWqM4yPaGiWUuLr7hg4HzCtmHW7jEzbjuW9l/wAR+HZ0jZxma6/zCh8qxVdRiOLyYqPqMcqfqPFbTDGfCLe23yUHh9Y2s7PM/Tdx3cjHsgDm3s5oda49xZM+z3G3YjJR57q6wU2C4HTTxSg3JmlZewY0fFyANvILOM7VxqI5zQSSUzDfU1zRY8hTWLljs03FbUzzPjLmU9QY3kxu6UjTsy2rg7HhYlhtTV0kkcM8jzC/drD0PYrSqjFpaHMsVad4n6mVsL/APqgeGaPkR+Kz1S5ifxlxeLyk37ueJpPrqH+6icSroqeOjbExzgDJaNvLvMQ0g+2JrvwVjxJkVXmPDsOeNq3V\\\\\\\\\\'"
-# Actual base64 image data continues - truncated for brevity
+MUDASSAR_B64 = "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\\\\\\\\\\\\\\'"
 
 PHOTO_SRC = f"data:image/png;base64,{MUDASSAR_B64}"
 
@@ -46,12 +45,9 @@ def safe_str(val) -> str:
 
 
 def md_to_html(text: str) -> str:
-    """
-    Convert **bold** markdown to HTML bold tags safely.
-    FIXED: Proper regex that matches **text** pattern correctly
-    """
+    """Convert **bold** markdown to HTML bold tags safely."""
     text = safe_str(text)
-    # Match **text** - using positive lookbehind/lookahead or simple capture
+    # Match **text** pattern correctly
     text = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', text)
     text = text.replace("\n", "<br>")
     return text
@@ -91,7 +87,7 @@ def add_message(role: str, content: str, source: str = ""):
     st.session_state.msg_count += 1
     if source == "prolog":
         st.session_state.prolog_queries += 1
-    if source == "aiml":
+    elif source == "aiml":
         st.session_state.aiml_replies += 1
 
 
@@ -106,6 +102,36 @@ def load_engines():
     pe = PrologEngine(os.path.join(base, "family.pl"))
     ae = AIMLEngine(os.path.join(base, "aiml_files"))
     return qh, pe, ae
+
+
+# ================================================================
+# INITIALIZE
+# ================================================================
+init_session()
+query_handler, prolog_engine, aiml_engine = load_engines()
+FINAL_PHOTO_SRC = get_photo_src()
+
+# ================================================================
+# SIDEBAR TOGGLE FUNCTION
+# ================================================================
+def toggle_sidebar():
+    st.session_state.sidebar_open = not st.session_state.sidebar_open
+
+
+# ================================================================
+# APPLY SIDEBAR CSS BASED ON STATE
+# ================================================================
+if not st.session_state.sidebar_open:
+    st.markdown("""
+    <style>
+    [data-testid="stSidebar"] {
+        display: none !important;
+    }
+    [data-testid="collapsedControl"] {
+        display: none !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 
 # ================================================================
@@ -142,41 +168,7 @@ def get_response(user_input: str):
 
 
 # ================================================================
-# SIDEBAR TOGGLE CSS - FIXED: No conflicting display:none that fights with Streamlit
-# ================================================================
-def apply_sidebar_css():
-    """Apply sidebar toggle CSS - uses proper Streamlit state management"""
-    if not st.session_state.get("sidebar_open", True):
-        st.markdown("""
-        <style>
-        /* Only hide sidebar when toggled off - without fighting Streamlit's state */
-        [data-testid="stSidebar"] {
-            display: none !important;
-        }
-        [data-testid="collapsedControl"] {
-            display: none !important;
-        }
-        /* Adjust main content when sidebar is hidden */
-        .main .block-container {
-            max-width: 100% !important;
-            padding-left: 2rem !important;
-            padding-right: 2rem !important;
-        }
-        </style>
-        """, unsafe_allow_html=True)
-
-
-# ================================================================
-# INITIALIZE SESSION AND ENGINES
-# ================================================================
-init_session()
-query_handler, prolog_engine, aiml_engine = load_engines()
-
-# Apply sidebar CSS
-apply_sidebar_css()
-
-# ================================================================
-# GLOBAL CSS — Aurora / Claude-style warm theme
+# GLOBAL CSS
 # ================================================================
 st.markdown("""
 <style>
@@ -201,7 +193,6 @@ st.markdown("""
     --radius: 20px;
     --radius-sm: 12px;
     --shadow: 0 4px 24px rgba(0,0,0,0.08);
-    --shadow-lg: 0 8px 40px rgba(0,0,0,0.12);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -211,17 +202,15 @@ html, body, [class*="css"] {
     color: var(--txt) !important;
 }
 
-/* Hide default Streamlit elements */
 #MainMenu, footer, header { visibility: hidden; }
 
 /* Animated Aurora Background */
 .stApp {
-    background:
-        radial-gradient(ellipse 80% 60% at 10% 20%, rgba(255,179,71,0.22) 0%, transparent 60%),
-        radial-gradient(ellipse 70% 50% at 85% 15%, rgba(116,185,255,0.20) 0%, transparent 55%),
-        radial-gradient(ellipse 60% 70% at 50% 90%, rgba(85,239,196,0.18) 0%, transparent 55%),
-        radial-gradient(ellipse 55% 45% at 90% 75%, rgba(255,107,157,0.16) 0%, transparent 50%),
-        #fdf8f3 !important;
+    background: radial-gradient(ellipse 80% 60% at 10% 20%, rgba(255,179,71,0.22) 0%, transparent 60%),
+                radial-gradient(ellipse 70% 50% at 85% 15%, rgba(116,185,255,0.20) 0%, transparent 55%),
+                radial-gradient(ellipse 60% 70% at 50% 90%, rgba(85,239,196,0.18) 0%, transparent 55%),
+                radial-gradient(ellipse 55% 45% at 90% 75%, rgba(255,107,157,0.16) 0%, transparent 50%),
+                #fdf8f3 !important;
     animation: auroraShift 12s ease-in-out infinite alternate;
 }
 
@@ -231,105 +220,54 @@ html, body, [class*="css"] {
     100% { filter: hue-rotate(-5deg) brightness(0.99); }
 }
 
-/* Custom Scrollbar */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
 
-/* Sidebar Styling */
 [data-testid="stSidebar"] {
     background: var(--sidebar-bg) !important;
     backdrop-filter: blur(20px) !important;
     border-right: 1px solid var(--border) !important;
     box-shadow: 4px 0 24px rgba(0,0,0,0.05) !important;
 }
-[data-testid="stSidebar"] * { color: var(--txt) !important; }
 
-/* Main Container */
 .block-container {
     padding: 0 0 80px 0 !important;
     max-width: 100% !important;
 }
 
-/* Buttons */
 .stButton > button {
     background: linear-gradient(135deg, var(--user-g1), var(--user-g2)) !important;
     color: white !important;
     border: none !important;
     border-radius: 50px !important;
     padding: 10px 28px !important;
-    font-family: 'Nunito', sans-serif !important;
     font-weight: 700 !important;
-    font-size: 14px !important;
     transition: all 0.25s ease !important;
-    box-shadow: 0 4px 14px rgba(255,112,67,0.3) !important;
     cursor: pointer !important;
     width: 100% !important;
 }
-.stButton > button:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px rgba(255,112,67,0.4) !important;
-}
-.stButton.secondary-btn > button {
-    background: white !important;
-    color: var(--txt2) !important;
-    border: 1px solid var(--border) !important;
-    box-shadow: var(--shadow) !important;
-}
 
-/* Text Input */
 .stTextInput input {
     background: white !important;
     border: 1.5px solid var(--border) !important;
     border-radius: 50px !important;
     padding: 14px 22px !important;
     font-size: 15px !important;
-    font-family: 'Nunito', sans-serif !important;
-    color: var(--txt) !important;
     box-shadow: var(--shadow) !important;
-    transition: border-color 0.2s, box-shadow 0.2s !important;
 }
 .stTextInput input:focus {
     border-color: var(--accent) !important;
-    box-shadow: 0 0 0 3px rgba(255,107,53,0.12) !important;
     outline: none !important;
 }
-.stTextInput input::placeholder { color: var(--txt3) !important; }
 .stTextInput label { display: none !important; }
 
-/* Metrics */
 [data-testid="stMetric"] {
     background: white !important;
     border-radius: var(--radius-sm) !important;
     padding: 12px !important;
     border: 1px solid var(--border) !important;
-    box-shadow: var(--shadow) !important;
-}
-[data-testid="stMetricLabel"] { color: var(--txt2) !important; font-size: 11px !important; }
-[data-testid="stMetricValue"] { color: var(--accent) !important; font-size: 20px !important; font-weight: 800 !important; }
-
-/* Expander */
-details {
-    background: white !important;
-    border: 1px solid var(--border) !important;
-    border-radius: var(--radius-sm) !important;
-    padding: 0 !important;
-    box-shadow: var(--shadow) !important;
-}
-summary {
-    padding: 12px 16px !important;
-    font-weight: 700 !important;
-    cursor: pointer !important;
-    color: var(--txt) !important;
 }
 
-/* Status Messages */
-.stSuccess { background: rgba(0,184,148,0.08) !important; border-color: var(--green) !important; border-radius: var(--radius-sm) !important; }
-.stError { background: rgba(255,107,107,0.08) !important; border-radius: var(--radius-sm) !important; }
-.stWarning { background: rgba(255,179,71,0.10) !important; border-radius: var(--radius-sm) !important; }
-
-hr { border-color: var(--border) !important; margin: 12px 0 !important; }
-
-/* Badge Chips */
 .chip {
     display: inline-block;
     padding: 4px 12px;
@@ -338,10 +276,9 @@ hr { border-color: var(--border) !important; margin: 12px 0 !important; }
     font-weight: 600;
     margin: 2px;
 }
-.chip-orange { background: rgba(255,112,67,0.1); color: #ff7043; border: 1px solid rgba(255,112,67,0.2); }
-.chip-blue { background: rgba(116,185,255,0.12); color: #2d89ef; border: 1px solid rgba(116,185,255,0.25); }
-.chip-green { background: rgba(0,184,148,0.10); color: #00b894; border: 1px solid rgba(0,184,148,0.2); }
-.chip-pink { background: rgba(255,107,157,0.10); color: #e84393; border: 1px solid rgba(255,107,157,0.2); }
+.chip-orange { background: rgba(255,112,67,0.1); color: #ff7043; }
+.chip-blue { background: rgba(116,185,255,0.12); color: #2d89ef; }
+.chip-pink { background: rgba(255,107,157,0.10); color: #e84393; }
 
 /* Orb Animation */
 .orb-wrap {
@@ -354,7 +291,7 @@ hr { border-color: var(--border) !important; margin: 12px 0 !important; }
     position: absolute;
     width: 200px;
     height: 200px;
-    background: conic-gradient(from 0deg, rgba(255,179,71,0.9), rgba(255,107,157,0.8), rgba(116,185,255,0.8), rgba(85,239,196,0.9), rgba(255,179,71,0.9));
+    background: conic-gradient(from 0deg, rgba(255,179,71,0.9), rgba(255,107,157,0.8), rgba(116,185,255,0.8), rgba(85,239,196,0.9));
     border-radius: 50%;
     filter: blur(28px);
     animation: orbPulse 6s ease-in-out infinite;
@@ -373,7 +310,6 @@ hr { border-color: var(--border) !important; margin: 12px 0 !important; }
     height: 100px;
     border-radius: 50%;
     border: 3px solid white;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     object-fit: cover;
 }
 @keyframes orbPulse {
@@ -382,7 +318,6 @@ hr { border-color: var(--border) !important; margin: 12px 0 !important; }
     66% { transform: scale(0.93) rotate(-10deg); opacity: 0.60; }
 }
 
-/* Welcome Screen */
 .welcome-wrap {
     max-width: 560px;
     margin: 30px auto 0;
@@ -392,9 +327,7 @@ hr { border-color: var(--border) !important; margin: 12px 0 !important; }
 .welcome-title {
     font-size: 26px;
     font-weight: 800;
-    color: var(--txt);
     margin: 0 0 6px;
-    line-height: 1.2;
 }
 .welcome-sub {
     font-size: 16px;
@@ -414,15 +347,12 @@ hr { border-color: var(--border) !important; margin: 12px 0 !important; }
     border-radius: 20px;
     padding: 8px 16px;
     font-size: 13px;
-    color: var(--txt2);
     cursor: pointer;
-    box-shadow: var(--shadow);
     transition: all 0.2s;
-    font-weight: 600;
 }
 .sug-chip:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
 
-/* Chat Bubbles */
+/* Chat Bubbles - FIXED STRUCTURE */
 .chat-scroll {
     max-width: 720px;
     margin: 0 auto;
@@ -445,7 +375,6 @@ hr { border-color: var(--border) !important; margin: 12px 0 !important; }
     height: 38px;
     border-radius: 50%;
     flex-shrink: 0;
-    margin-top: 2px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -454,7 +383,7 @@ hr { border-color: var(--border) !important; margin: 12px 0 !important; }
 }
 .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 .avatar-user { background: linear-gradient(135deg, #ff7043, #ff8a65); }
-.avatar-bot { background: white; border: 1.5px solid var(--border); box-shadow: var(--shadow); }
+.avatar-bot { background: white; border: 1.5px solid var(--border); }
 
 .bubble {
     max-width: 72%;
@@ -468,14 +397,12 @@ hr { border-color: var(--border) !important; margin: 12px 0 !important; }
     background: linear-gradient(135deg, #ff7043, #ff8a65);
     color: white;
     border-bottom-right-radius: 5px;
-    box-shadow: 0 4px 14px rgba(255,112,67,0.25);
 }
 .bubble-bot {
     background: white;
     color: var(--txt);
     border: 1px solid var(--border);
     border-bottom-left-radius: 5px;
-    box-shadow: var(--shadow);
 }
 .msg-meta {
     font-size: 10px;
@@ -491,12 +418,10 @@ hr { border-color: var(--border) !important; margin: 12px 0 !important; }
     font-weight: 700;
     padding: 1px 6px;
     border-radius: 10px;
-    letter-spacing: 0.3px;
 }
 .src-prolog { background: rgba(255,112,67,0.12); color: #ff7043; }
 .src-aiml { background: rgba(0,184,148,0.12); color: #00b894; }
 
-/* Header Bar */
 .top-bar {
     background: rgba(255,255,255,0.85);
     backdrop-filter: blur(16px);
@@ -508,32 +433,17 @@ hr { border-color: var(--border) !important; margin: 12px 0 !important; }
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
 }
 .top-bar .bot-av {
     width: 42px;
     height: 42px;
     border-radius: 50%;
     overflow: hidden;
-    border: 2px solid rgba(255,112,67,0.3);
-    box-shadow: 0 0 14px rgba(255,112,67,0.2);
     flex-shrink: 0;
 }
 .top-bar .bot-av img { width: 100%; height: 100%; object-fit: cover; }
-.top-bar h2 {
-    font-size: 16px;
-    font-weight: 800;
-    color: var(--txt);
-    margin: 0;
-}
-.top-bar p {
-    font-size: 11px;
-    color: var(--green);
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
+.top-bar h2 { font-size: 16px; font-weight: 800; margin: 0; }
+.top-bar p { font-size: 11px; color: var(--green); margin: 0; display: flex; align-items: center; gap: 4px; }
 .online-dot {
     width: 7px;
     height: 7px;
@@ -547,7 +457,6 @@ hr { border-color: var(--border) !important; margin: 12px 0 !important; }
     50% { opacity: 0.3; }
 }
 
-/* Input Bar - Fixed at bottom */
 .input-bar {
     position: fixed;
     bottom: 0;
@@ -558,10 +467,8 @@ hr { border-color: var(--border) !important; margin: 12px 0 !important; }
     border-top: 1px solid var(--border);
     padding: 12px 20px 14px;
     z-index: 99;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
 }
 
-/* Sidebar Headers */
 .sb-head {
     font-size: 10px;
     font-weight: 800;
@@ -570,37 +477,22 @@ hr { border-color: var(--border) !important; margin: 12px 0 !important; }
     color: var(--txt3);
     margin: 0 0 8px;
 }
-.sb-card {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 14px;
-    margin-bottom: 12px;
-    box-shadow: var(--shadow);
-}
 
-/* Toggle Button */
 .toggle-btn > button {
     background: white !important;
     color: var(--txt2) !important;
     border: 1px solid var(--border) !important;
-    box-shadow: var(--shadow) !important;
     padding: 8px 14px !important;
     font-size: 18px !important;
     width: auto !important;
-    border-radius: var(--radius-sm) !important;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .bubble { max-width: 88% !important; font-size: 13px !important; }
-    .chat-scroll { padding: 12px 10px 16px !important; }
     .orb-wrap { width: 160px !important; height: 160px !important; }
     .orb { width: 160px !important; height: 160px !important; }
     .orb-inner img { width: 80px !important; height: 80px !important; }
     .welcome-title { font-size: 20px !important; }
-    .welcome-sub { font-size: 14px !important; }
-    .input-bar { padding: 8px 12px 10px !important; }
 }
 </style>
 """, unsafe_allow_html=True)
@@ -612,33 +504,29 @@ hr { border-color: var(--border) !important; margin: 12px 0 !important; }
 with st.sidebar:
     st.markdown(f"""
     <div style="text-align:center;padding:20px 0 10px;">
-        <img src="{PHOTO_SRC}" style="width:72px;height:72px;border-radius:50%;
-             border:3px solid rgba(255,112,67,.3);box-shadow:0 4px 16px rgba(255,112,67,.2);
-             object-fit:cover;margin-bottom:10px;">
-        <div style="font-size:18px;font-weight:800;color:#1a1a2e;">Mudassar Chatbot</div>
-        <div style="font-size:12px;color:#9999bb;margin-top:2px;">Prolog · AIML · Python · Streamlit</div>
+        <img src="{FINAL_PHOTO_SRC}" style="width:72px;height:72px;border-radius:50%;
+             border:3px solid rgba(255,112,67,.3);object-fit:cover;margin-bottom:10px;">
+        <div style="font-size:18px;font-weight:800;">Mudassar Chatbot</div>
+        <div style="font-size:12px;color:#9999bb;">Prolog · AIML · Python · Streamlit</div>
     </div>
     """, unsafe_allow_html=True)
 
     st.divider()
 
-    # Engine Status
     st.markdown('<div class="sb-head">⚙️ Engine Status</div>', unsafe_allow_html=True)
     st.success("🧠 Prolog — Online" if prolog_engine.is_loaded else "🧠 Prolog — Offline")
     st.success("💬 AIML — Online" if aiml_engine.is_loaded else "⚠️ AIML — Offline")
 
     st.divider()
 
-    # Session Stats
     st.markdown('<div class="sb-head">📊 Session</div>', unsafe_allow_html=True)
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Msgs", st.session_state.msg_count)
-    col2.metric("Prolog", st.session_state.prolog_queries)
-    col3.metric("AIML", st.session_state.aiml_replies)
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Msgs", st.session_state.msg_count)
+    c2.metric("Prolog", st.session_state.prolog_queries)
+    c3.metric("AIML", st.session_state.aiml_replies)
 
     st.divider()
 
-    # Family Members
     st.markdown('<div class="sb-head">👥 Family Members</div>', unsafe_allow_html=True)
     males = ["Ali", "Asad", "Shakeel", "Zain", "Usman", "Hamza"]
     females = ["Alia", "Shakeela", "Zaini", "Laiba", "Sana", "Nadia"]
@@ -648,42 +536,20 @@ with st.sidebar:
 
     st.divider()
 
-    # Relations
     st.markdown('<div class="sb-head">🔗 Relations</div>', unsafe_allow_html=True)
-    relations = [
-        "father", "mother", "son", "daughter", "brother", "sister",
-        "uncle", "aunt", "cousin", "nephew", "niece", "grandfather",
-        "grandmother", "chacha", "phoophi", "maamu", "khala",
-        "dada", "dadi", "nana", "nani", "ancestor", "descendant"
-    ]
+    relations = ["father", "mother", "son", "daughter", "brother", "sister", "uncle", "aunt",
+                 "cousin", "nephew", "niece", "grandfather", "grandmother", "chacha", "phoophi",
+                 "maamu", "khala", "dada", "dadi", "nana", "nani", "ancestor", "descendant"]
     rel_html = " ".join(f'<span class="chip chip-orange">{r}</span>' for r in relations)
     st.markdown(rel_html, unsafe_allow_html=True)
 
     st.divider()
 
-    # Example Queries
     with st.expander("💡 Example Queries"):
-        examples = [
-            "who is father of ali",
-            "grandfather of zain",
-            "can you tell me chacha of laiba",
-            "mother of laiba",
-            "dada of zain",
-            "ancestor of laiba",
-            "brother of ali",
-            "hello",
-        ]
+        examples = ["who is father of ali", "grandfather of zain", "chacha of laiba", "mother of laiba", "hello"]
         for ex in examples:
-            st.markdown(
-                f'<div style="background:#f7f7f9;border:1px solid #eee;border-radius:8px;'
-                f'padding:6px 10px;font-size:12px;color:#5a5a7a;margin:4px 0;'
-                f'font-family:monospace;">▸ {ex}</div>',
-                unsafe_allow_html=True
-            )
+            st.markdown(f'<div style="background:#f7f7f9;border:1px solid #eee;border-radius:8px;padding:6px 10px;font-size:12px;margin:4px 0;">▸ {ex}</div>', unsafe_allow_html=True)
 
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    # Clear Chat Button
     if st.button("🗑️ Clear Chat", use_container_width=True):
         st.session_state.messages = []
         st.session_state.msg_count = 0
@@ -691,31 +557,21 @@ with st.sidebar:
         st.session_state.aiml_replies = 0
         st.rerun()
 
-    st.markdown("""
-    <div style="text-align:center;font-size:10px;color:#ccc;
-         border-top:1px solid #eee;margin-top:12px;padding-top:10px;">
-        AI 473 · UMT · Spring 2026
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown('<div style="text-align:center;font-size:10px;color:#ccc;border-top:1px solid #eee;margin-top:12px;padding-top:10px;">AI 473 · UMT · Spring 2026</div>', unsafe_allow_html=True)
 
 
 # ================================================================
-# HEADER BAR WITH TOGGLE BUTTON - FIXED: Using on_click for toggle
+# HEADER BAR WITH TOGGLE BUTTON
 # ================================================================
-def toggle_sidebar():
-    """Toggle sidebar open/close state"""
-    st.session_state.sidebar_open = not st.session_state.sidebar_open
+col_toggle, col_header = st.columns([0.06, 0.94])
 
+with col_toggle:
+    st.button("☰", key="toggle_btn", on_click=toggle_sidebar, use_container_width=True)
 
-toggle_col, header_col = st.columns([0.06, 0.94])
-
-with toggle_col:
-    st.button("☰", key="toggle_sidebar_btn", on_click=toggle_sidebar, use_container_width=True)
-
-with header_col:
+with col_header:
     st.markdown(f"""
-    <div class="top-bar">
-        <div class="bot-av"><img src="{PHOTO_SRC}" alt="Mudassar"></div>
+    <div class="top-bar" style="background:transparent; padding:0;">
+        <div class="bot-av"><img src="{FINAL_PHOTO_SRC}" alt="Mudassar"></div>
         <div>
             <h2>Mudassar Chatbot</h2>
             <p><span class="online-dot"></span> Online · Prolog AI Active</p>
@@ -730,28 +586,24 @@ with header_col:
 if not st.session_state.messages:
     # Welcome Screen
     suggestions = ["father of ali", "grandfather of zain", "chacha of laiba", "hello", "help"]
-    chips_html = " ".join(f'<div class="sug-chip">▸ {s}</div>' for s in suggestions)
+    chips_html = "".join(f'<div class="sug-chip" onclick="this.click()">▸ {s}</div>' for s in suggestions)
 
     st.markdown(f"""
     <div class="welcome-wrap">
         <div class="orb-wrap">
             <div class="orb"></div>
             <div class="orb-inner">
-                <img src="{PHOTO_SRC}" alt="Mudassar">
+                <img src="{FINAL_PHOTO_SRC}" alt="Mudassar">
             </div>
         </div>
         <div class="welcome-title">Hi, I am Mudassar Chatbot 👋</div>
         <div class="welcome-sub">How Can I Help You Today?</div>
-        <p style="font-size:12px;color:#9999bb;margin:0 0 6px;">
-            Ask me any family relationship question — I use Prolog AI to answer!
-        </p>
+        <p style="font-size:12px;color:#9999bb;">Ask me any family relationship question — I use Prolog AI to answer!</p>
         <div class="suggestion-row">{chips_html}</div>
     </div>
     """, unsafe_allow_html=True)
 else:
-    # Chat Messages Display
-    chat_html = ['<div class="chat-scroll">']
-
+    # Chat Messages Display - FIXED HTML STRUCTURE
     for msg in st.session_state.messages:
         role = msg["role"]
         text = md_to_html(msg["content"])
@@ -759,42 +611,41 @@ else:
         source = msg.get("source", "")
 
         if role == "user":
-            chat_html.append(f"""
+            # User message
+            st.markdown(f"""
             <div class="msg-row user-row">
                 <div class="avatar avatar-user">👤</div>
-                <div>
+                <div style="flex:1">
                     <div class="bubble bubble-user">{text}</div>
                     <div class="msg-meta">{timestamp}</div>
                 </div>
             </div>
-            """)
+            """, unsafe_allow_html=True)
         else:
+            # Bot message
             badge = ""
             if source == "prolog":
                 badge = '<span class="src-badge src-prolog">🧠 Prolog</span>'
             elif source == "aiml":
                 badge = '<span class="src-badge src-aiml">💬 AIML</span>'
 
-            chat_html.append(f"""
+            st.markdown(f"""
             <div class="msg-row bot-row">
-                <div class="avatar avatar-bot"><img src="{PHOTO_SRC}" alt="bot"></div>
-                <div>
+                <div class="avatar avatar-bot">
+                    <img src="{FINAL_PHOTO_SRC}" alt="bot" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                </div>
+                <div style="flex:1">
                     <div class="bubble bubble-bot">{text}</div>
                     <div class="msg-meta">{timestamp} {badge}</div>
                 </div>
             </div>
-            """)
-
-    chat_html.append('</div>')
-    st.markdown("".join(chat_html), unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
 
 
 # ================================================================
 # INPUT BAR (Fixed at bottom)
 # ================================================================
-# Add spacer for fixed input bar
 st.markdown("<div style='height:80px;'></div>", unsafe_allow_html=True)
-
 st.markdown('<div class="input-bar">', unsafe_allow_html=True)
 
 input_col, button_col = st.columns([5, 1])
