@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="1.0.1" xmlns="http://alicebot.org/2001/AIML-1.0.1"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://alicebot.org/2001/AIML-1.0.1 http://alicebot.org/2001/AIML-1.0.1/AIML.xsd">
+
+  <!-- ============================================================ -->
+  <!-- GREETINGS                                                      -->
+  <!-- ============================================================ -->
+
+  <category>
+    <pattern>HI</pattern>
+    <template>Hello! 👋 I am the Family Relationship Chatbot. Ask me about family relations like "who is the father of Ali" or "chacha of Laiba". How can I help you?</template>
+  </category>
+
+  <category>
+    <pattern>HI *</pattern>
+    <template>Hello there! 😊 Ask me anything about the family tree. Try: "father of ali" or "who is grandfather of zain".</template>
+  </category>
+
+  <category>
+    <pattern>HELLO</pattern>
+    <template>Hello! 👋 I am your Family Relationship Assistant. I can find relations like father, mother, uncle, chacha, dada, nana and more. What would you like to know?</template>
+  </category>
+
+  <category>
+    <pattern>HELLO *</pattern>
+    <template>Hi there! Ready to explore the family tree. Try asking: "who is the sister of ali" or "mother of zain".</template>
+  </category>
+
+  <category>
+    <pattern>HEY</pattern>
+    <template>Hey! 🤖 Welcome to the Family Chatbot. I can answer questions about any family relationship. What would you like to know?</template>
+  </category>
+
+  <category>
+    <pattern>HEY *</pattern>
+    <template>Hey! I'm here to help with family relationship queries. What would you like to find out?</template>
+  </category>
+
+  <category>
+    <pattern>GREETINGS</pattern>
+    <template>Greetings! 🌟 I am the Family Relationship Chatbot powered by Prolog AI. Ask me about any family member and their relations!</template>
+  </category>
+
+  <category>
+    <pattern>SALAAM</pattern>
+    <template>Wa Alaikum Assalam! 🌙 Welcome! I can help you discover family relationships. Try asking: "who is chacha of laiba" or "dada of zain".</template>
+  </category>
+
+  <category>
+    <pattern>ASSALAM O ALAIKUM</pattern>
+    <template>Wa Alaikum Assalam! 🌙 Welcome to the Family Relationship Chatbot. I support both Western and Eastern (Urdu) relation names. How can I assist you today?</template>
+  </category>
+
+  <!-- ============================================================ -->
+  <!-- SMALL TALK                                                     -->
+  <!-- ============================================================ -->
+
+  <category>
+    <pattern>HOW ARE YOU</pattern>
+    <template>I am doing great, thank you for asking! 😊 I am always ready to answer your family relationship questions. What would you like to know?</template>
+  </category>
+
+  <category>
+    <pattern>HOW ARE YOU *</pattern>
+    <template>I am functioning perfectly! Thanks for asking. Let me help you explore the family tree today.</template>
+  </category>
+
+  <category>
+    <pattern>WHAT IS YOUR NAME</pattern>
+    <template>My name is FamilyBot 🤖 — your intelligent Family Relationship Assistant powered by Prolog + AIML + Python!</template>
+  </category>
+
+  <category>
+    <pattern>WHAT IS YOUR NAME *</pattern>
+    <template>I go by FamilyBot! I am an AI chatbot that reasons about family relationships using a Prolog knowledge base.</template>
+  </category>
+
+  <category>
+    <pattern>WHO ARE YOU</pattern>
+    <template>I am FamilyBot 🤖 — an intelligent chatbot that uses Prolog symbolic reasoning to answer questions about family relationships. I support relations like father, mother, uncle, aunt, chacha, phoophi, dada, nana, and many more!</template>
+  </category>
+
+  <category>
+    <pattern>WHAT CAN YOU DO</pattern>
+    <template>I can find family relationships! 🔍 I support:
+• Western: father, mother, son, daughter, brother, sister, uncle, aunt, cousin, nephew, niece
+• Eastern: chacha, phoophi, maamu, khala, dada, dadi, nana, nani
+• Grandparents: grandfather, grandmother
+• In-laws: father-in-law, mother-in-law
+• Lineage: ancestor, descendant
+
+Just ask: "who is the father of ali" or "chacha of laiba"!</template>
+  </category>
+
+  <category>
+    <pattern>WHAT DO YOU DO</pattern>
+    <template>I answer family relationship questions! Give me a person's name and a relation, and I will find the answer using my Prolog knowledge base. Try: "grandfather of zain" or "who is sister of ali".</template>
+  </category>
+
+  <category>
+    <pattern>TELL ME ABOUT YOURSELF</pattern>
+    <template>I am FamilyBot 🤖, built with:
+🧠 Prolog — for logical reasoning
+💬 AIML — for conversation handling
+🐍 Python — as the smart middleware
+🌐 Streamlit — for this beautiful interface
+
+I can answer any family relationship query intelligently!</template>
+  </category>
+
+  <category>
+    <pattern>HOW DO YOU WORK</pattern>
+    <template>Great question! Here is how I work:
+1️⃣ You ask a question like "father of ali"
+2️⃣ Python detects the relation (father) and name (ali)
+3️⃣ A Prolog query is built and executed
+4️⃣ Prolog searches the family knowledge base
+5️⃣ I return the answer to you! 🎯</template>
+  </category>
+
+  <category>
+    <pattern>ARE YOU A ROBOT</pattern>
+    <template>I am indeed a chatbot! 🤖 But a smart one — I use symbolic AI (Prolog) to reason about family relationships logically. Not just pattern matching!</template>
+  </category>
+
+  <category>
+    <pattern>ARE YOU SMART</pattern>
+    <template>I like to think so! 😄 I use Prolog — a logic programming language — to reason about family relationships. I can handle complex queries like "ancestor" and "descendant" using recursive rules!</template>
+  </category>
+
+  <!-- ============================================================ -->
+  <!-- HELP AND INSTRUCTIONS                                         -->
+  <!-- ============================================================ -->
+
+  <category>
+    <pattern>HELP</pattern>
+    <template>Here are some example queries you can try:
+👨 "who is the father of ali"
+👩 "mother of zain"
+👴 "grandfather of laiba"
+🧔 "chacha of laiba"
+👵 "dadi of zain"
+👨‍👩‍👧 "cousin of zain"
+🔍 "ancestor of laiba"
+
+I understand many variations — just ask naturally!</template>
+  </category>
+
+  <category>
+    <pattern>HELP ME</pattern>
+    <template>Of course! To find a family relationship, just ask me like:
+• "father of [name]"
+• "who is the mother of [name]"
+• "can you tell me the grandfather of [name]"
+• "please tell me who is chacha of [name]"
+
+I understand natural language, so feel free to ask in any way!</template>
+  </category>
+
+  <category>
+    <pattern>HOW DO I USE YOU</pattern>
+    <template>Simply type a family relationship question! Examples:
+✅ "father of ali"
+✅ "who is ali's father"
+✅ "what is the relation: ali is the father of zain"
+✅ "grandfather of laiba"
+✅ "chacha of zain"
+
+I will figure out what you mean and search the Prolog knowledge base for the answer!</template>
+  </category>
+
+  <category>
+    <pattern>WHAT RELATIONS DO YOU KNOW</pattern>
+    <template>I know these family relations:
+🔵 Basic: father, mother, son, daughter, brother, sister
+🟢 Extended: uncle, aunt, cousin, nephew, niece
+🟡 Grandparents: grandfather, grandmother
+🟠 Eastern: chacha, phoophi, maamu, khala, dada, dadi, nana, nani
+🔴 In-laws: father-in-law, mother-in-law, brother-in-law, sister-in-law
+⚫ Lineage: ancestor, descendant</template>
+  </category>
+
+  <category>
+    <pattern>EXAMPLE</pattern>
+    <template>Here are example queries:
+1. "who is the father of ali"
+2. "mother of zain"
+3. "grandfather of laiba"
+4. "can you tell me who the chacha of laiba is"
+5. "please tell me the dadi of zain"
+6. "sister of ali"
+7. "cousin of zain"
+8. "ancestor of laiba"</template>
+  </category>
+
+  <category>
+    <pattern>EXAMPLES</pattern>
+    <template>Try these example queries:
+1. "father of ali"
+2. "who is the mother of zain"
+3. "grandfather of zain"
+4. "chacha of laiba"
+5. "dada of zain"
+6. "brother of ali"
+7. "cousin of laiba"
+8. "ancestor of laiba"</template>
+  </category>
+
+  <!-- ============================================================ -->
+  <!-- FAMILY MEMBERS INFO                                           -->
+  <!-- ============================================================ -->
+
+  <category>
+    <pattern>WHO IS IN THE FAMILY</pattern>
+    <template>The family members are:
+👨 Male: Ali, Asad, Shakeel, Zain, Usman, Hamza
+👩 Female: Alia, Shakeela, Zaini, Laiba, Sana, Nadia
+
+You can ask about any relationship between them!</template>
+  </category>
+
+  <category>
+    <pattern>LIST ALL MEMBERS</pattern>
+    <template>Family Members:
+👨 Males: Ali, Asad, Shakeel, Zain, Usman, Hamza
+👩 Females: Alia, Shakeela, Zaini, Laiba, Sana, Nadia
+
+Ask me: "father of zain" or "mother of laiba" to explore relations!</template>
+  </category>
+
+  <category>
+    <pattern>WHO IS ALI</pattern>
+    <template>Ali is a male member of the family. His father is Shakeel and his mother is Shakeela. He is married to Alia and they have a son named Zain. You can ask more like "father of ali" or "brother of ali".</template>
+  </category>
+
+  <category>
+    <pattern>WHO IS ZAIN</pattern>
+    <template>Zain is a male member of the family. His father is Ali and his mother is Alia. His grandparents are Shakeel (dada) and Shakeela (dadi). Try: "grandfather of zain" or "uncle of zain".</template>
+  </category>
+
+  <!-- ============================================================ -->
+  <!-- THANK YOU AND GOODBYE                                         -->
+  <!-- ============================================================ -->
+
+  <category>
+    <pattern>THANK YOU</pattern>
+    <template>You are most welcome! 😊 Feel free to ask any more family relationship questions anytime!</template>
+  </category>
+
+  <category>
+    <pattern>THANKS</pattern>
+    <template>Happy to help! 🎉 Ask me any time about family relationships.</template>
+  </category>
+
+  <category>
+    <pattern>THANK YOU *</pattern>
+    <template>You're welcome! 😊 Let me know if you have more questions about the family tree.</template>
+  </category>
+
+  <category>
+    <pattern>BYE</pattern>
+    <template>Goodbye! 👋 It was great helping you explore the family tree. Come back anytime!</template>
+  </category>
+
+  <category>
+    <pattern>GOODBYE</pattern>
+    <template>Goodbye! 👋 Take care. Remember, I am always here to help with family relationship queries!</template>
+  </category>
+
+  <category>
+    <pattern>BYE *</pattern>
+    <template>Bye bye! 👋 See you next time. The family tree will be waiting!</template>
+  </category>
+
+  <category>
+    <pattern>SEE YOU</pattern>
+    <template>See you later! 🌟 Come back if you want to explore more family relationships!</template>
+  </category>
+
+  <!-- ============================================================ -->
+  <!-- AFFIRMATIONS                                                   -->
+  <!-- ============================================================ -->
+
+  <category>
+    <pattern>YES</pattern>
+    <template>Great! What would you like to know about the family tree?</template>
+  </category>
+
+  <category>
+    <pattern>NO</pattern>
+    <template>No problem! Let me know if you have any other questions.</template>
+  </category>
+
+  <category>
+    <pattern>OK</pattern>
+    <template>Alright! Feel free to ask any family relationship question whenever you are ready. 😊</template>
+  </category>
+
+  <category>
+    <pattern>OKAY</pattern>
+    <template>Okay! Just type a relation query like "father of ali" whenever you are ready!</template>
+  </category>
+
+  <!-- ============================================================ -->
+  <!-- UNKNOWN / FALLBACK                                            -->
+  <!-- ============================================================ -->
+
+  <category>
+    <pattern>*</pattern>
+    <template>I did not quite understand that. 🤔 I am best at answering family relationship questions. Try:
+• "father of ali"
+• "who is grandfather of zain"
+• "chacha of laiba"
+Type HELP to see all supported queries!</template>
+  </category>
+
+</aiml>
