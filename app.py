@@ -718,57 +718,22 @@ st.markdown('</div>', unsafe_allow_html=True)
 
 # Process
 # ───────────────────────────────────────────────
-# 🛠️ UPDATED PROCESS BLOCK (Paste this at the very bottom)
+# PROCESS INPUT
 # ───────────────────────────────────────────────
-
-# Ensure session state initialization is checked
-if "messages" not in st.session_state:
-    st.session_state.messages = []
 
 if send and user_input.strip():
     clean_input = user_input.strip()
-    
-    # 1. Save user query to session history
-    st.session_state.messages.append({
-        "role": "user", 
-        "text": clean_input, 
-        "src": "user",
-        "ts": ""
-    })
-    
-    # 2. Parse through natural language query handler
-    matched_relation, target_person = handler.parse_query(clean_input)
-    
-    bot_response = None
-    source_used = "prolog"
-    
-    if matched_relation and target_person:
-        # Build query string (e.g., "father(X, ali)")
-        prolog_query = handler.build_query(matched_relation, target_person)
-        
-        # Execute query via prolog engine wrapper
-        raw_results = prolog.query(prolog_query)
-        
-        # Format list results into sentence structure
-        bot_response = handler.format_answer(matched_relation, target_person, raw_results)
-    
-    # 3. Fallback to AIML engine if Prolog did not match keywords
-    if not bot_response and aiml_eng.is_loaded:
-        bot_response = aiml_eng.respond(clean_input)
-        source_used = "aiml"
-        
-    # 4. Ultimate fallback if both processing options draw blanks
-    if not bot_response:
-        bot_response = "🤖 I couldn't trace that relationship in the knowledge base. Try phrasing it like: 'Who is the father of ali?'"
-        source_used = "fallback"
 
-    # 5. Commit chatbot's answer back to persistent session history
-    st.session_state.messages.append({
-        "role": "bot", 
-        "text": bot_response, 
-        "src": source_used,
-        "ts": ""
-    })
-    
-    # 6. Force instant UI reload to show the response bubbles
+    # 1. Save user message (use "content" key — matches the chat renderer)
+    import datetime
+    add_msg("user", clean_input)
+
+    # 2. Get bot response via the existing get_response() function
+    #    (uses query_handler, prolog_engine, aiml_engine — all correct names)
+    bot_response, source_used = get_response(clean_input)
+
+    # 3. Save bot reply
+    add_msg("assistant", bot_response, source=source_used)
+
+    # 4. Force UI refresh
     st.rerun()
