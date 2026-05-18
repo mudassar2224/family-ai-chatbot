@@ -1,8 +1,7 @@
 # ================================================================
 # utils/__init__.py
-# FIX: Import each engine individually inside try/except so one
-#      failing engine (e.g. Prolog on first deploy) does not crash
-#      the entire application at startup.
+# Each engine is wrapped in its own try/except so one failing
+# import (e.g. Prolog on cold start) does not crash the whole app.
 # ================================================================
 
 from .query_handler import QueryHandler

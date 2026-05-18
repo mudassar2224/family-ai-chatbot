@@ -1,42 +1,59 @@
 # ================================================================
 # utils/prolog_engine.py
-# Prolog Reasoning Engine
-#
-# FIX: pyswip raises SwiPrologNotFoundError (NOT ImportError) when
-#      SWI-Prolog binary is missing. We catch Exception broadly at
-#      import time so the app does not crash on Streamlit Cloud.
-#      The packages.txt file handles the real fix (apt install).
+# FIXES applied:
+#   1. Catch Exception (not just ImportError) for SwiPrologNotFoundError
+#   2. safe_val() converts bytes/Atom objects to plain Python str
+#      → fixes "TypeError: a bytes-like object is required" on Python 3.12
 # ================================================================
 
 import os
-from typing import List, Optional
+from typing import List
 
 # ------------------------------------------------------------------
-# SAFE IMPORT — pyswip raises SwiPrologNotFoundError at import time
-# (not ImportError) when SWI-Prolog binary is not on the system.
-# Catching broad Exception here prevents the whole app from crashing.
+# SAFE IMPORT
+# pyswip raises SwiPrologNotFoundError (a custom Exception, NOT
+# ImportError) when the SWI-Prolog binary is missing on the system.
+# Catching broad Exception keeps the app alive until packages.txt
+# installs swi-prolog on Streamlit Cloud.
 # ------------------------------------------------------------------
 PYSWIP_AVAILABLE = False
-_Prolog_class     = None
+_Prolog          = None
 
 try:
-    from pyswip import Prolog as _Prolog_class
+    from pyswip import Prolog as _Prolog
     PYSWIP_AVAILABLE = True
 except Exception:
-    # SWI-Prolog binary not found OR pyswip not installed.
-    # packages.txt will install swi-prolog on Streamlit Cloud.
     PYSWIP_AVAILABLE = False
+
+
+def _safe_val(val) -> str:
+    """
+    Convert any pyswip result to a clean Python string.
+
+    pyswip 0.3.x may return:
+      - str       (older versions)
+      - bytes     (newer versions on Linux/Python 3.12)
+      - Atom      (pyswip wrapper object with a .chars attribute)
+    All cases are handled here to avoid TypeError downstream.
+    """
+    if isinstance(val, bytes):
+        return val.decode("utf-8", errors="replace")
+    if hasattr(val, "chars"):           # pyswip Atom object
+        return str(val.chars)
+    if hasattr(val, "value"):           # pyswip Term object
+        return str(val.value)
+    return str(val)
 
 
 class PrologEngine:
     """
-    Wrapper around pyswip to interact with the Prolog knowledge base.
+    Wrapper around pyswip for the family.pl knowledge base.
 
-    Usage:
-        engine = PrologEngine("family.pl")
-        if engine.is_loaded:
-            results = engine.query("father(X, ali)")
-            # ['shakeel']
+    Usage
+    -----
+    engine = PrologEngine("family.pl")
+    if engine.is_loaded:
+        print(engine.query("father(X, ali)"))   # ['shakeel']
     """
 
     def __init__(self, pl_file_path: str):
@@ -46,14 +63,12 @@ class PrologEngine:
         self._prolog      = None
         self._initialize()
 
-    # ----------------------------------------------------------
-    # PUBLIC API
-    # ----------------------------------------------------------
+    # ── Public API ─────────────────────────────────────────────
 
     def query(self, query_string: str) -> List[str]:
         """
-        Execute a Prolog query and return all bindings for variable X.
-        Returns [] if Prolog unavailable or query fails.
+        Run a Prolog query and return all bindings for variable X.
+        Always returns a list of plain Python strings.
         """
         if not self.is_loaded or self._prolog is None:
             return []
@@ -62,12 +77,12 @@ class PrologEngine:
         try:
             for solution in self._prolog.query(query_string):
                 if "X" in solution:
-                    results.append(str(solution["X"]))
+                    results.append(_safe_val(solution["X"]))
         except Exception as e:
             self.error = f"Query error: {e}"
             return []
 
-        # Deduplicate preserving order
+        # Remove duplicates while preserving order
         seen, unique = set(), []
         for r in results:
             if r not in seen:
@@ -76,7 +91,7 @@ class PrologEngine:
         return unique
 
     def query_bool(self, query_string: str) -> bool:
-        """Execute a boolean Prolog query (no variables)."""
+        """Boolean Prolog query — returns True if any solution exists."""
         if not self.is_loaded or self._prolog is None:
             return False
         try:
@@ -85,7 +100,6 @@ class PrologEngine:
             return False
 
     def get_all_members(self) -> dict:
-        """Return all male/female members from the knowledge base."""
         return {
             "males"  : self.query("male(X)"),
             "females": self.query("female(X)"),
@@ -94,23 +108,20 @@ class PrologEngine:
     def status(self) -> str:
         if not PYSWIP_AVAILABLE:
             return (
-                "❌ SWI-Prolog not found. "
-                "Make sure packages.txt contains 'swi-prolog' "
-                "and redeploy on Streamlit Cloud."
+                "❌ SWI-Prolog not found on this system. "
+                "Add 'swi-prolog' to packages.txt for Streamlit Cloud."
             )
         if not self.is_loaded:
             return f"❌ Knowledge base failed to load: {self.error}"
         return f"✅ Prolog engine loaded: {self.pl_file_path}"
 
-    # ----------------------------------------------------------
-    # PRIVATE
-    # ----------------------------------------------------------
+    # ── Private ────────────────────────────────────────────────
 
     def _initialize(self):
         if not PYSWIP_AVAILABLE:
             self.error = (
                 "SWI-Prolog binary not found. "
-                "On Streamlit Cloud, add 'swi-prolog' to packages.txt."
+                "Add 'swi-prolog' to packages.txt on Streamlit Cloud."
             )
             return
 
@@ -119,7 +130,7 @@ class PrologEngine:
             return
 
         try:
-            self._prolog = _Prolog_class()
+            self._prolog = _Prolog()
             safe_path    = self.pl_file_path.replace("\\", "/")
             self._prolog.consult(safe_path)
             self.is_loaded = True
