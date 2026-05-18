@@ -19,13 +19,31 @@ from utils.prolog_engine  import PrologEngine
 from utils.aiml_engine    import AIMLEngine
 
 # ───────────────────────────────────────────────
-# PAGE CONFIG
+# SESSION STATE  (before set_page_config so
+# sidebar_open can drive initial_sidebar_state)
+# ───────────────────────────────────────────────
+def init_session():
+    defaults = {
+        "messages"       : [],
+        "msg_count"      : 0,
+        "prolog_queries" : 0,
+        "aiml_replies"   : 0,
+        "sidebar_open"   : True,
+    }
+    for k, v in defaults.items():
+        if k not in st.session_state:
+            st.session_state[k] = v
+
+init_session()
+
+# ───────────────────────────────────────────────
+# PAGE CONFIG  — sidebar state driven by session
 # ───────────────────────────────────────────────
 st.set_page_config(
     page_title="Mudassar Chatbot",
     page_icon="🤖",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="expanded" if st.session_state.sidebar_open else "collapsed",
 )
 
 # ───────────────────────────────────────────────
@@ -59,41 +77,6 @@ def md_to_html(text: str) -> str:
     text = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', text, flags=re.DOTALL)
     text = text.replace("\n", "<br>")
     return text
-
-# ───────────────────────────────────────────────
-# SESSION STATE
-# ───────────────────────────────────────────────
-def init_session():
-    defaults = {
-        "messages"       : [],
-        "msg_count"      : 0,
-        "prolog_queries" : 0,
-        "aiml_replies"   : 0,
-        "sidebar_open"   : True,
-    }
-    for k, v in defaults.items():
-        if k not in st.session_state:
-            st.session_state[k] = v
-
-init_session()
-
-# ───────────────────────────────────────────────
-# SIDEBAR TOGGLE CSS
-# ───────────────────────────────────────────────
-if not st.session_state.sidebar_open:
-    st.markdown("""
-    <style>
-    /* FIX: Use transform/width instead of display:none — avoids fighting
-       Streamlit's own sidebar state management on rerenders. */
-    [data-testid="stSidebar"] {
-        transform: translateX(-110%) !important;
-        width: 0px !important;
-        min-width: 0px !important;
-        overflow: hidden !important;
-        transition: none !important;
-    }
-    [data-testid="collapsedControl"] { visibility: hidden !important; }
-    </style>""", unsafe_allow_html=True)
 
 # ───────────────────────────────────────────────
 # GLOBAL CSS  — Aurora / Claude-style warm theme
@@ -637,7 +620,8 @@ col_toggle, col_header = st.columns([0.06, 0.94])
 
 with col_toggle:
     st.markdown('<div class="toggle-btn">', unsafe_allow_html=True)
-    if st.button("☰"):
+    if st.button("☰", key="sidebar_toggle"):
+        # Flip the flag — set_page_config reads it on the NEXT rerun
         st.session_state.sidebar_open = not st.session_state.sidebar_open
         st.rerun()
     st.markdown('</div>', unsafe_allow_html=True)
