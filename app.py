@@ -54,8 +54,10 @@ def safe_str(val) -> str:
 def md_to_html(text: str) -> str:
     """Convert **bold** markdown to HTML bold tags safely."""
     text = safe_str(text)
-    text = re.sub(r'\\*\\*(.*?)\\*\\*', r'<b>\\1</b>', text, flags=re.DOTALL)
-    text = text.replace("\\n", "<br>")
+    # FIX: r'\*\*' correctly matches literal ** in the input text.
+    # r'<b>\1</b>' is the correct backreference (not r'<b>\\1</b>').
+    text = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', text, flags=re.DOTALL)
+    text = text.replace("\n", "<br>")
     return text
 
 # ───────────────────────────────────────────────
@@ -81,8 +83,16 @@ init_session()
 if not st.session_state.sidebar_open:
     st.markdown("""
     <style>
-    [data-testid="stSidebar"]          { display: none !important; }
-    [data-testid="collapsedControl"]   { display: none !important; }
+    /* FIX: Use transform/width instead of display:none — avoids fighting
+       Streamlit's own sidebar state management on rerenders. */
+    [data-testid="stSidebar"] {
+        transform: translateX(-110%) !important;
+        width: 0px !important;
+        min-width: 0px !important;
+        overflow: hidden !important;
+        transition: none !important;
+    }
+    [data-testid="collapsedControl"] { visibility: hidden !important; }
     </style>""", unsafe_allow_html=True)
 
 # ───────────────────────────────────────────────
