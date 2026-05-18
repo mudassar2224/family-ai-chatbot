@@ -717,23 +717,9 @@ with btn_col:
 st.markdown('</div>', unsafe_allow_html=True)
 
 # Process
-# ───────────────────────────────────────────────
-# PROCESS INPUT
-# ───────────────────────────────────────────────
-
 if send and user_input.strip():
-    clean_input = user_input.strip()
-
-    # 1. Save user message (use "content" key — matches the chat renderer)
-    import datetime
-    add_msg("user", clean_input)
-
-    # 2. Get bot response via the existing get_response() function
-    #    (uses query_handler, prolog_engine, aiml_engine — all correct names)
-    bot_response, source_used = get_response(clean_input)
-
-    # 3. Save bot reply
-    add_msg("assistant", bot_response, source=source_used)
-
-    # 4. Force UI refresh
+    add_msg("user", user_input.strip())
+    with st.spinner(""):
+        resp, src = get_response(user_input.strip())
+    add_msg("assistant", resp, source=src)
     st.rerun()
